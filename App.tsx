@@ -1,14 +1,25 @@
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { useEffect, useState } from "react";
+import { View, Text, TouchableOpacity, StyleSheet, NativeModules, DeviceEventEmitter } from "react-native";
+
 
 export default function App() {
+  const [count, setCount] = useState(0);
+
+  useEffect(() => {
+    DeviceEventEmitter.addListener("count", (data) => {
+      console.log(data);
+      setCount(data.message)
+    })
+  },[])
 
   function handleClick() {
     console.log('Clicando...')
+    NativeModules.TestModule.teste();
   }
 
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Avançando no Modulo</Text>
+      <Text style={styles.text}>Avançando no Modulo: {count}</Text>
 
       <TouchableOpacity style={styles.areaButton} onPress={handleClick}>
         <Text style={styles.textButton}>Clicar</Text>
